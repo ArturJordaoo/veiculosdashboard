@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "..src/app/generated/prisma"
+  output   = "/app/generated/prisma"
 }
 
 datasource db {
@@ -25,7 +25,6 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
-  @@map("accounts")
 }
 
 model Session {
@@ -42,12 +41,11 @@ model User {
   id            String    @id @default(cuid())
   name          String?
   email         String?   @unique
+  password      String
   emailVerified DateTime? @map("email_verified")
   image         String?
   accounts      Account[]
   sessions      Session[]
-
-  @@map("users")
 }
 
 model VerificationToken {
@@ -56,7 +54,6 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
-  @@map("verification_tokens")
 }
 
 model Veiculo {

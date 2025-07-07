@@ -1,13 +1,13 @@
-
 generator client {
   provider = "prisma-client-js"
-  output   = "/generated/prisma"
+  output   = "/app/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
 model Account {
   id                 String  @id @default(cuid())
   userId             String  @map("user_id")
@@ -21,13 +21,12 @@ model Account {
   scope              String?
   id_token           String? @db.Text
   session_state      String?
- 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  user               User    @relation(fields: [userId], references: [id], onDelete: Cascade)
  
   @@unique([provider, providerAccountId])
-  @@map("accounts")
 }
- 
+
 model Session {
   id           String   @id @default(cuid())
   sessionToken String   @unique @map("session_token")
@@ -37,30 +36,30 @@ model Session {
  
   @@map("sessions")
 }
- 
+
 model User {
   id            String    @id @default(cuid())
   name          String?
   email         String?   @unique
+  password      String    
   emailVerified DateTime? @map("email_verified")
   image         String?
   accounts      Account[]
   sessions      Session[]
- 
-  @@map("users")
+
 }
- 
+
 model VerificationToken {
   identifier String
   token      String
   expires    DateTime
- 
+
   @@unique([identifier, token])
-  @@map("verification_tokens")
 }
-model Veiculo{
-  id Int @id @default(autoincrement())
-  nome String
-  placa String @unique
+
+model Veiculo {
+  id     Int    @id @default(autoincrement())
+  nome   String
+  placa  String @unique
   status String @default("ativo")
 }

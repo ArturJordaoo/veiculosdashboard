@@ -1,5 +1,6 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { signIn } from 'next-auth/react'; // Importando a função do NextAuth
 import Image from 'next/image';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast, { Toaster } from 'react-hot-toast';
@@ -31,29 +32,23 @@ export default function SignIn() {
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
-      const res = await fetch('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
+      const res = await signIn('credentials', {
+        redirect: false, // Não redirecionar automaticamente
+        email: data.email,
+        password: data.senha,
       });
 
-      if (!res.ok) {
-        const result = await res.text();
-        console.error('Erro no login:', result);
-        toast.error('Erro ao fazer login');
-        return;
+      if (res?.error) {
+        toast.error('Erro ao fazer login: ' + res.error);
+      } else {
+        toast.success('Login bem-sucedido!');
+        // Aqui você pode redirecionar para uma página protegida ou inicial
+        window.location.href = '/'; // Exemplo de redirecionamento após login
       }
-
-      const result = await res.json(); // Tenta analisar como JSON
-      console.log('Login bem-sucedido!', result);
-      toast.success('Login bem-sucedido!');
-      // Você pode armazenar o token ou redirecionar o usuário após o login bem-sucedido.
     } catch (error) {
       console.error('Erro ao fazer login:', error);
+      toast.error('Erro ao fazer login');
     }
-    toast.error('Erro ao fazer login');
   };
 
   return (
