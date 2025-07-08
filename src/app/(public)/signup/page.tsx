@@ -36,7 +36,6 @@ const schema = z
     },
   );
 
-// Definindo os tipos para os dados do formulário
 type FormData = {
   nome: string;
   email: string;
@@ -66,17 +65,16 @@ export default function SignUp() {
       });
 
       if (!res.ok) {
-        const result = await res.text(); // Pega a resposta como texto (pode ser HTML ou JSON)
+        const result = await res.text();
         console.error('Erro no cadastro:', result);
         toast.error('Erro no cadastro');
         return;
       }
 
-      const result = await res.json(); // Tenta analisar como JSON
+      const result = await res.json();
       console.log('Cadastro bem-sucedido!', result);
       toast.success('Cadastro bem-sucedido!');
       reset();
-      // Aqui você pode redirecionar o usuário para uma página de login ou dashboard
     } catch (error) {
       console.error('Erro ao cadastrar usuário:', error);
       toast.error('Erro no cadastro');
@@ -101,7 +99,6 @@ export default function SignUp() {
         </p>
         <div>
           <form onSubmit={handleSubmit(onSubmit)}>
-            {/* Nome */}
             <div className="mb-6">
               <label
                 htmlFor="nome"
@@ -121,7 +118,6 @@ export default function SignUp() {
               )}
             </div>
 
-            {/* Email */}
             <div className="mb-6">
               <label
                 htmlFor="email"
@@ -141,7 +137,6 @@ export default function SignUp() {
               )}
             </div>
 
-            {/* Senha */}
             <div className="mb-6">
               <label
                 htmlFor="senha"
@@ -174,7 +169,6 @@ export default function SignUp() {
               )}
             </div>
 
-            {/* Confirmar Senha */}
             <div className="mb-6">
               <label
                 htmlFor="confirmarSenha"
@@ -210,7 +204,6 @@ export default function SignUp() {
               )}
             </div>
 
-            {/* Botão de Enviar */}
             <button
               type="submit"
               className="py-3 w-full rounded-xl bg-[#1D4ED8] text-white text-lg hover:bg-[#2563EB] focus:outline-none cursor-pointer"

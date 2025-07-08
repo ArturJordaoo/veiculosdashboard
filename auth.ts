@@ -1,14 +1,15 @@
 import { PrismaAdapter } from '@auth/prisma-adapter';
+import bcrypt from 'bcrypt';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { PrismaClient } from './src/app/generated/prisma';
+import { PrismaClient } from './prisma/generated/prisma';
 
 const prisma = new PrismaClient();
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   session: {
     strategy: 'jwt',
-    maxAge: 60 * 60, // 1 hora de validade do token
+    maxAge: 60 * 60,
   },
   providers: [
     CredentialsProvider({
@@ -55,6 +56,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     },
   },
   pages: {
-    signIn: '/signin', // Página de login personalizada
+    signIn: '/signin',
   },
 });

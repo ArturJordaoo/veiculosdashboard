@@ -1,12 +1,11 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { signIn } from 'next-auth/react'; // Importando a função do NextAuth
+import { signIn } from 'next-auth/react';
 import Image from 'next/image';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast, { Toaster } from 'react-hot-toast';
 import { z } from 'zod';
 
-// Definindo o esquema de validação com Zod
 const schema = z.object({
   email: z.string().email('Email inválido').nonempty('Email é obrigatório'),
   senha: z
@@ -15,7 +14,6 @@ const schema = z.object({
     .nonempty('Senha é obrigatória'),
 });
 
-// Definindo os tipos para os dados do formulário
 type FormData = {
   email: string;
   senha: string;
@@ -33,7 +31,7 @@ export default function SignIn() {
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
       const res = await signIn('credentials', {
-        redirect: false, // Não redirecionar automaticamente
+        redirect: false,
         email: data.email,
         password: data.senha,
       });
@@ -42,8 +40,7 @@ export default function SignIn() {
         toast.error('Erro ao fazer login: ' + res.error);
       } else {
         toast.success('Login bem-sucedido!');
-        // Aqui você pode redirecionar para uma página protegida ou inicial
-        window.location.href = '/'; // Exemplo de redirecionamento após login
+        window.location.href = '/dashboard';
       }
     } catch (error) {
       console.error('Erro ao fazer login:', error);
@@ -130,7 +127,6 @@ export default function SignIn() {
           </div>
         </div>
 
-        {/* Imagem Lateral (somente em telas grandes) */}
         <div className="hidden sm:block w-full sm:w-1/2 h-full">
           <img
             src="/images/login.svg"
