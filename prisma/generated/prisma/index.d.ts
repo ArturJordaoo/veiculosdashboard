@@ -5586,29 +5586,19 @@ export namespace Prisma {
 
   export type AggregateVeiculo = {
     _count: VeiculoCountAggregateOutputType | null
-    _avg: VeiculoAvgAggregateOutputType | null
-    _sum: VeiculoSumAggregateOutputType | null
     _min: VeiculoMinAggregateOutputType | null
     _max: VeiculoMaxAggregateOutputType | null
   }
 
-  export type VeiculoAvgAggregateOutputType = {
-    id: number | null
-  }
-
-  export type VeiculoSumAggregateOutputType = {
-    id: number | null
-  }
-
   export type VeiculoMinAggregateOutputType = {
-    id: number | null
+    id: string | null
     nome: string | null
     placa: string | null
     status: string | null
   }
 
   export type VeiculoMaxAggregateOutputType = {
-    id: number | null
+    id: string | null
     nome: string | null
     placa: string | null
     status: string | null
@@ -5622,14 +5612,6 @@ export namespace Prisma {
     _all: number
   }
 
-
-  export type VeiculoAvgAggregateInputType = {
-    id?: true
-  }
-
-  export type VeiculoSumAggregateInputType = {
-    id?: true
-  }
 
   export type VeiculoMinAggregateInputType = {
     id?: true
@@ -5691,18 +5673,6 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Select which fields to average
-    **/
-    _avg?: VeiculoAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: VeiculoSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
      * Select which fields to find the minimum value
     **/
     _min?: VeiculoMinAggregateInputType
@@ -5733,20 +5703,16 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: VeiculoCountAggregateInputType | true
-    _avg?: VeiculoAvgAggregateInputType
-    _sum?: VeiculoSumAggregateInputType
     _min?: VeiculoMinAggregateInputType
     _max?: VeiculoMaxAggregateInputType
   }
 
   export type VeiculoGroupByOutputType = {
-    id: number
+    id: string
     nome: string
     placa: string
     status: string
     _count: VeiculoCountAggregateOutputType | null
-    _avg: VeiculoAvgAggregateOutputType | null
-    _sum: VeiculoSumAggregateOutputType | null
     _min: VeiculoMinAggregateOutputType | null
     _max: VeiculoMaxAggregateOutputType | null
   }
@@ -5799,7 +5765,7 @@ export namespace Prisma {
     name: "Veiculo"
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
-      id: number
+      id: string
       nome: string
       placa: string
       status: string
@@ -6226,7 +6192,7 @@ export namespace Prisma {
    * Fields of the Veiculo model
    */
   interface VeiculoFieldRefs {
-    readonly id: FieldRef<"Veiculo", 'Int'>
+    readonly id: FieldRef<"Veiculo", 'String'>
     readonly nome: FieldRef<"Veiculo", 'String'>
     readonly placa: FieldRef<"Veiculo", 'String'>
     readonly status: FieldRef<"Veiculo", 'String'>
@@ -7010,7 +6976,7 @@ export namespace Prisma {
     AND?: VeiculoWhereInput | VeiculoWhereInput[]
     OR?: VeiculoWhereInput[]
     NOT?: VeiculoWhereInput | VeiculoWhereInput[]
-    id?: IntFilter<"Veiculo"> | number
+    id?: StringFilter<"Veiculo"> | string
     nome?: StringFilter<"Veiculo"> | string
     placa?: StringFilter<"Veiculo"> | string
     status?: StringFilter<"Veiculo"> | string
@@ -7024,7 +6990,7 @@ export namespace Prisma {
   }
 
   export type VeiculoWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
+    id?: string
     placa?: string
     AND?: VeiculoWhereInput | VeiculoWhereInput[]
     OR?: VeiculoWhereInput[]
@@ -7039,17 +7005,15 @@ export namespace Prisma {
     placa?: SortOrder
     status?: SortOrder
     _count?: VeiculoCountOrderByAggregateInput
-    _avg?: VeiculoAvgOrderByAggregateInput
     _max?: VeiculoMaxOrderByAggregateInput
     _min?: VeiculoMinOrderByAggregateInput
-    _sum?: VeiculoSumOrderByAggregateInput
   }
 
   export type VeiculoScalarWhereWithAggregatesInput = {
     AND?: VeiculoScalarWhereWithAggregatesInput | VeiculoScalarWhereWithAggregatesInput[]
     OR?: VeiculoScalarWhereWithAggregatesInput[]
     NOT?: VeiculoScalarWhereWithAggregatesInput | VeiculoScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"Veiculo"> | number
+    id?: StringWithAggregatesFilter<"Veiculo"> | string
     nome?: StringWithAggregatesFilter<"Veiculo"> | string
     placa?: StringWithAggregatesFilter<"Veiculo"> | string
     status?: StringWithAggregatesFilter<"Veiculo"> | string
@@ -7321,46 +7285,49 @@ export namespace Prisma {
   }
 
   export type VeiculoCreateInput = {
+    id?: string
     nome: string
     placa: string
     status?: string
   }
 
   export type VeiculoUncheckedCreateInput = {
-    id?: number
+    id?: string
     nome: string
     placa: string
     status?: string
   }
 
   export type VeiculoUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
     nome?: StringFieldUpdateOperationsInput | string
     placa?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
   }
 
   export type VeiculoUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     nome?: StringFieldUpdateOperationsInput | string
     placa?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
   }
 
   export type VeiculoCreateManyInput = {
-    id?: number
+    id?: string
     nome: string
     placa: string
     status?: string
   }
 
   export type VeiculoUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
     nome?: StringFieldUpdateOperationsInput | string
     placa?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
   }
 
   export type VeiculoUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     nome?: StringFieldUpdateOperationsInput | string
     placa?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
@@ -7668,26 +7635,11 @@ export namespace Prisma {
     expires?: SortOrder
   }
 
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
-  }
-
   export type VeiculoCountOrderByAggregateInput = {
     id?: SortOrder
     nome?: SortOrder
     placa?: SortOrder
     status?: SortOrder
-  }
-
-  export type VeiculoAvgOrderByAggregateInput = {
-    id?: SortOrder
   }
 
   export type VeiculoMaxOrderByAggregateInput = {
@@ -7702,26 +7654,6 @@ export namespace Prisma {
     nome?: SortOrder
     placa?: SortOrder
     status?: SortOrder
-  }
-
-  export type VeiculoSumOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type UserCreateNestedOneWithoutAccountsInput = {
@@ -7858,14 +7790,6 @@ export namespace Prisma {
     update?: SessionUpdateWithWhereUniqueWithoutUserInput | SessionUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: SessionUpdateManyWithWhereWithoutUserInput | SessionUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: SessionScalarWhereInput | SessionScalarWhereInput[]
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -8027,33 +7951,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
-  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
-  }
-
-  export type NestedFloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
   }
 
   export type UserCreateWithoutAccountsInput = {

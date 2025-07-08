@@ -58,7 +58,7 @@ model VerificationToken {
 }
 
 model Veiculo {
-  id     Int    @id @default(autoincrement())
+  id            String    @id @default(cuid())
   nome   String
   placa  String @unique
   status String @default("ativo")
