@@ -1,3 +1,5 @@
+import { auth } from '@/auth';
+import SessionProvider from '@/components/SessionProvider';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
@@ -11,14 +13,18 @@ export const metadata: Metadata = {
   description: 'Veiculos Dashboard',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
+
   return (
     <html lang="en">
-      <body className={`${interSans.variable} antialiased`}>{children}</body>
+      <SessionProvider session={session}>
+        <body className={`${interSans.variable} antialiased`}>{children}</body>
+      </SessionProvider>
     </html>
   );
 }

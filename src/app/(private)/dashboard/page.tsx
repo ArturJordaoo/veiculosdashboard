@@ -10,14 +10,29 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { VehicleFormData, vehicleSchema } from '../../../schema/veiculo';
 
 const Layout: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { data: session } = useSession();
+  const [isClient, setIsClient] = useState(false); // State to track if it's running on the client-side
+  const router = useRouter();
+
+  useEffect(() => {
+    setIsClient(true); // Set to true once the component is mounted on the client
+  }, []);
+
+  useEffect(() => {
+    if (isClient && !session) {
+      router.push('/signin'); // Redirect if no session found and on the client-side
+    }
+  }, [isClient, session, router]);
 
   const {
     register,
@@ -35,6 +50,11 @@ const Layout: React.FC = () => {
   };
 
   const [activeTab, setActiveTab] = useState('dashboard');
+
+  // Conditional rendering: only render the layout if the session exists
+  if (!session || !isClient) {
+    return null; // Or a loading spinner, or anything you prefer while checking session
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
