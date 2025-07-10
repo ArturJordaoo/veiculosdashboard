@@ -6,8 +6,10 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast, { Toaster } from 'react-hot-toast';
 import { z } from 'zod';
@@ -48,12 +50,22 @@ export default function SignUp() {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
+  const { data: session } = useSession();
+  const router = useRouter();
 
+  useEffect(() => {
+    if (session) {
+      router.push('/dashboard');
+    }
+  }, [session, router]);
+
+  if (session) {
+    return null; // Ou um componente de carregamento
+  }
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
       const res = await fetch('/api/signup', {
@@ -65,19 +77,22 @@ export default function SignUp() {
       });
 
       if (!res.ok) {
-        const result = await res.text();
-        console.error('Erro no cadastro:', result);
-        toast.error('Erro no cadastro');
+        // Pega a resposta de erro da API
+        const result = await res.json();
+        console.error('Erro no cadastro:', result.error);
+
+        // Exibe a mensagem de erro no toast
+        toast.error(result.error || 'Erro no cadastro');
         return;
       }
 
       const result = await res.json();
       console.log('Cadastro bem-sucedido!', result);
       toast.success('Cadastro bem-sucedido!');
-      reset();
+      window.location.href = '/signin';
     } catch (error) {
       console.error('Erro ao cadastrar usuário:', error);
-      toast.error('Erro no cadastro');
+      toast.error('Erro inesperado, por favor tente novamente');
     }
   };
 

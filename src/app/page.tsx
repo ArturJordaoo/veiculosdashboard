@@ -1,9 +1,22 @@
-import SignIn from '@/app/(public)/signin/page';
+'use client';
+
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function Home() {
-  return (
-    <div>
-      <SignIn />
-    </div>
-  );
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status === 'loading') return;
+
+    if (session) {
+      router.push('/dashboard');
+    } else {
+      router.push('/signin');
+    }
+  }, [session, status, router]);
+
+  return <div>Carregando...</div>;
 }

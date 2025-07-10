@@ -1,7 +1,10 @@
 'use client';
+
 import { zodResolver } from '@hookform/resolvers/zod';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast, { Toaster } from 'react-hot-toast';
 import { z } from 'zod';
@@ -27,6 +30,18 @@ export default function SignIn() {
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (session) {
+      router.push('/dashboard');
+    }
+  }, [session, router]);
+
+  if (session) {
+    return null; // Ou um componente de carregamento
+  }
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
@@ -93,7 +108,7 @@ export default function SignIn() {
                     htmlFor="senha"
                     className="text-sm block font-medium text-[#181818]"
                   >
-                    Password
+                    Senha
                   </label>
                 </div>
                 <input
