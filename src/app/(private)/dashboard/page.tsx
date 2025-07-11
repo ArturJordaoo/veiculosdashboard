@@ -1,6 +1,6 @@
 'use client';
 import CardInfo from '@/components/cardInfo';
-import Veiculos from '@/components/listaVeiculos';
+import VeiculosList from '@/components/listaVeiculos';
 import {
   Dialog,
   DialogClose,
@@ -21,7 +21,8 @@ import { VehicleFormData, vehicleSchema } from '../../../schema/veiculo';
 const Layout: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: session } = useSession();
-  const [isClient, setIsClient] = useState(false); // State to track if it's running on the client-side
+  const [isClient, setIsClient] = useState(false); // State to track if
+
   const router = useRouter();
 
   useEffect(() => {
@@ -207,7 +208,7 @@ const Layout: React.FC = () => {
                 </DialogContent>
               </Dialog>
             </div>
-            <Veiculos />
+            <VeiculosList />
           </div>
         </div>
       </div>

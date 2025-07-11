@@ -1,69 +1,104 @@
-'use client';
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-// Definindo tipos para Veículo
 interface Veiculo {
   id: string;
   nome: string;
   placa: string;
-  status: 'ativo' | 'inativo';
+  status: string;
 }
 
-export default function Veiculos() {
-  const [veiculos, setVeiculos] = useState<Veiculo[]>([]); // Especificando que o estado vai ser um array de veículos
+export default function VeiculosList() {
+  const [veiculos, setVeiculos] = useState<Veiculo[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Buscar os veículos ao carregar o componente
   useEffect(() => {
-    const fetchVeiculos = async () => {
-      try {
-        const res = await fetch('/api/vehicles');
-        if (res.ok) {
-          const data: { veiculos: Veiculo[] } = await res.json(); // Especificando o tipo da resposta da API
-          setVeiculos(data.veiculos); // Armazena os veículos na state
-        } else {
-          console.error('Erro ao carregar veículos');
-        }
-      } catch (error) {
-        console.error('Erro ao buscar veículos:', error);
-      }
-    };
+    async function fetchVeiculos() {
+      const response = await fetch('/api/vehicles/getVeiculos');
+      const data = await response.json();
+      setVeiculos(data);
+      setLoading(false);
+    }
 
     fetchVeiculos();
-  }, []); // A dependência vazia significa que só será executado uma vez após o primeiro render
+  }, []);
 
-  // Função para excluir veículo
+  // Function to handle Delete
   const handleDelete = async (id: string) => {
     try {
-      await fetch(`/api/vehicles/${id}`, { method: 'DELETE' });
-      // Após excluir, remove o veículo da lista localmente
-      setVeiculos(veiculos.filter((veiculo) => veiculo.id !== id));
+      const response = await fetch(`/api/vehicles/${id}/delVeiculo`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        setVeiculos(veiculos.filter((veiculo) => veiculo.id !== id));
+      } else {
+        alert('Failed to delete vehicle');
+      }
     } catch (error) {
-      console.error('Erro ao excluir veículo:', error);
+      alert('Error while deleting vehicle');
     }
   };
 
-  // Função para inativar veículo
-  const handleInactivate = async (id: string) => {
+  // Function to handle Change Status (Inativo)
+  const handleInactivate = async (id: string, currentStatus: string) => {
+    const newStatus = currentStatus === 'ativo' ? 'inativo' : 'ativo';
+
     try {
-      await fetch(`/api/vehicles/${id}`, {
+      const response = await fetch(`/api/vehicles/${id}/statusVeiculo`, {
+        method: 'PATCH',
+        body: JSON.stringify({ status: newStatus }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const updatedVehicle = await response.json();
+        setVeiculos((prevVeiculos) =>
+          prevVeiculos.map((veiculo) =>
+            veiculo.id === id ? updatedVehicle : veiculo,
+          ),
+        );
+      } else {
+        alert('Failed to change vehicle status');
+      }
+    } catch (error) {
+      alert('Error while changing vehicle status');
+    }
+  };
+
+  // Function to handle Edit
+  const handleEdit = async (id: string, updatedData: any) => {
+    try {
+      const response = await fetch(`/api/veiculos/${id}/editVeiculo`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ status: 'inativo' }),
+        body: JSON.stringify(updatedData),
       });
-      // Atualiza o status do veículo na lista local
-      setVeiculos(
-        veiculos.map((veiculo) =>
-          veiculo.id === id ? { ...veiculo, status: 'inativo' } : veiculo,
-        ),
-      );
+
+      if (response.ok) {
+        const updatedVehicle = await response.json();
+        setVeiculos((prevVeiculos) =>
+          prevVeiculos.map((veiculo) =>
+            veiculo.id === id ? updatedVehicle : veiculo,
+          ),
+        );
+      } else {
+        alert('Failed to edit vehicle');
+      }
     } catch (error) {
-      console.error('Erro ao inativar veículo:', error);
+      alert('Error while editing vehicle');
     }
   };
+
+  if (loading) {
+    return <div>Carregando...</div>;
+  }
 
   return (
     <div className="p-6 rounded-lg flex">
@@ -80,7 +115,9 @@ export default function Veiculos() {
               <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">
                 Status
               </th>
-              <th className="px-4 py-2 text-left text-sm font-medium text-gray-600"></th>
+              <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">
+                Ações
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -115,8 +152,8 @@ export default function Veiculos() {
 
                   {/* Botão de Inativar */}
                   <button
-                    onClick={() => handleInactivate(veiculo.id)}
-                    className="text-yellow-500"
+                    onClick={() => handleInactivate(veiculo.id, veiculo.status)}
+                    className="text-yellow-500 cursor-pointer"
                   >
                     <Image
                       src="/images/archive.svg"
@@ -129,7 +166,7 @@ export default function Veiculos() {
                   {/* Botão de Excluir */}
                   <button
                     onClick={() => handleDelete(veiculo.id)}
-                    className="text-red-500"
+                    className="text-red-500 cursor-pointer"
                   >
                     <Image
                       src="/images/bin.svg"

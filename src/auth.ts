@@ -1,5 +1,5 @@
 // auth.ts
-import { prisma } from '@/lib/prisma';
+import prisma from '@/lib/prisma';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import bcrypt from 'bcrypt';
 import NextAuth from 'next-auth';
