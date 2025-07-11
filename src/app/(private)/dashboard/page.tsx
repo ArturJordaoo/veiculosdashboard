@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 import CardInfo from '@/components/cardInfo';
 import VeiculosList from '@/components/listaVeiculos';
@@ -10,10 +9,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import Navbar from '@/components/ui/navbar';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -23,17 +22,17 @@ interface Veiculo {
   id: string;
   nome: string;
   placa: string;
-  status: string; // Add status field for consistency
+  status: string;
 }
 
 const Layout: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [vehicles, setVehicles] = useState<Veiculo[]>([]); // Change from Vehicle[] to Veiculo[]
+  const [vehicles, setVehicles] = useState<Veiculo[]>([]);
 
   const { data: session } = useSession();
   const [isClient, setIsClient] = useState(false);
   const getFirstName = (name: string) => {
-    return name.split(' ')[0]; // Pega a primeira parte antes do espaço
+    return name.split(' ')[0];
   };
   const router = useRouter();
 
@@ -72,7 +71,6 @@ const Layout: React.FC = () => {
     }
   };
 
-  // Form handling with react-hook-form and validation
   const {
     register,
     handleSubmit,
@@ -95,38 +93,15 @@ const Layout: React.FC = () => {
 
   const [activeTab, setActiveTab] = useState('dashboard');
 
-  // Conditional rendering: only render the layout if the session exists
   if (!session || !isClient) {
-    return null; // Or a loading spinner, or anything you prefer while checking session
+    return null;
   }
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      <div className="w-full bg-white p-4 flex justify-between items-center">
-        <div className="text-2xl font-bold text-white">
-          <Link href="/dashboard">
-            <Image
-              src="/images/logo.svg"
-              alt="logo"
-              width={157}
-              height={44}
-              className="relative grid justify-center items-center"
-            />
-          </Link>
-        </div>
-        <div className="flex items-center space-x-4">
-          <Image
-            src="/images/userlogo.svg"
-            alt="user"
-            width={26}
-            height={26}
-            className="relative grid justify-center items-center mx-2"
-          />
-        </div>
-      </div>
-
-      <div className="flex flex-1">
-        <div className="w-1/5 text-black p-6 border-r border-gray-200">
+      <Navbar userName={session.user.name} />
+      <div className="flex flex-1 flex-col sm:flex-row">
+        <div className="w-full sm:w-1/5 text-black p-6 border-b sm:border-r sm:border-gray-200">
           <div className="text-xl font-light mb-6">Navegação</div>
           <ul>
             <li>
@@ -170,7 +145,7 @@ const Layout: React.FC = () => {
           </ul>
         </div>
 
-        <div className="w-4/5 p-6">
+        <div className="w-full sm:w-4/5 p-6">
           <div className="container mx-auto px-4 py-6">
             <header className="grid items-center py-4 px-6 rounded-lg mb-6">
               <div className="text-5xl font-normal text-[#2B3A4B]">
@@ -180,7 +155,8 @@ const Layout: React.FC = () => {
                 Cadastre e gerencie seus veículos
               </div>
             </header>
-            <CardInfo />
+            <CardInfo vehicles={vehicles} />{' '}
+            {/* Passando a lista de veículos para os cards */}
             <div className="p-6 rounded-lg mb-6">
               <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                 <DialogTrigger asChild>

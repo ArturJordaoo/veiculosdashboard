@@ -11,7 +11,7 @@ export default async function handler(
   if (req.method === 'PUT') {
     try {
       const updatedVehicle = await prisma.veiculo.update({
-        where: { id: String(id) },
+        where: { id: String(id) }, // Ensure ID is passed as a string
         data: {
           nome,
           placa,

@@ -51,10 +51,10 @@ export default function VeiculosList({
       if (response.ok) {
         setVeiculos(veiculos.filter((veiculo) => veiculo.id !== id));
       } else {
-        alert('Failed to delete vehicle');
+        alert('Não foi possível deletar');
       }
     } catch (error) {
-      alert('Error while deleting vehicle');
+      alert('Erro no processo de deletar');
     }
   };
 
@@ -79,10 +79,10 @@ export default function VeiculosList({
           ),
         );
       } else {
-        alert('Failed to change vehicle status');
+        alert('Falha ao trocar status');
       }
     } catch (error) {
-      alert('Error while changing vehicle status');
+      alert('Falha no Processo de trocar status');
     }
   };
 
@@ -94,7 +94,6 @@ export default function VeiculosList({
     setIsModalOpen(true);
   };
 
-  // Submit the edited vehicle
   const handleSubmitEdit = async () => {
     if (!editVehicle) return;
 
@@ -105,7 +104,7 @@ export default function VeiculosList({
 
     try {
       const response = await fetch(
-        `/api/veiculos/${editVehicle.id}/editVeiculo`,
+        `/api/vehicles/${editVehicle.id}/editVeiculo`,
         {
           method: 'PUT',
           headers: {
@@ -124,10 +123,10 @@ export default function VeiculosList({
         );
         setIsModalOpen(false); // Close the modal
       } else {
-        alert('Failed to edit vehicle');
+        alert('Falha ao Editar Veículo');
       }
     } catch (error) {
-      alert('Error while editing vehicle');
+      alert('Erro no Processo');
     }
   };
 
@@ -220,7 +219,7 @@ export default function VeiculosList({
       {/* Modal for editing vehicle */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent>
-          <DialogTitle>Edit Vehicle</DialogTitle>
+          <DialogTitle>Editar Veículo</DialogTitle>
           <DialogDescription>
             Edit the details of the vehicle.
           </DialogDescription>
