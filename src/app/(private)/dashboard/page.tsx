@@ -101,7 +101,7 @@ const Layout: React.FC = () => {
       <Navbar userName={session.user.name} />
       <div className="flex flex-1 flex-col sm:flex-row">
         <div className="w-full sm:w-1/5 text-black p-6 border-b sm:border-r sm:border-gray-200">
-          <div className="text-xl font-light mb-6">Navegação</div>
+          <div className="text-xl font-light mb-6">Dashboard</div>{' '}
           <ul>
             <li>
               <button

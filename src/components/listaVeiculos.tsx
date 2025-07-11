@@ -5,7 +5,7 @@ import {
   DialogContent,
   DialogDescription,
   DialogTitle,
-} from '@/components/ui/dialog'; // Assuming you are using your Dialog component
+} from '@/components/ui/dialog';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
@@ -41,7 +41,6 @@ export default function VeiculosList({
     fetchVeiculos();
   }, [vehicles]);
 
-  // Function to handle Delete
   const handleDelete = async (id: string) => {
     try {
       const response = await fetch(`/api/vehicles/${id}/delVeiculo`, {
@@ -58,7 +57,6 @@ export default function VeiculosList({
     }
   };
 
-  // Function to handle Change Status (Inativo)
   const handleInactivate = async (id: string, currentStatus: string) => {
     const newStatus = currentStatus === 'ativo' ? 'inativo' : 'ativo';
 
@@ -86,7 +84,6 @@ export default function VeiculosList({
     }
   };
 
-  // Function to handle Edit and open the modal
   const handleEdit = (veiculo: Veiculo) => {
     setEditVehicle(veiculo);
     setVehicleName(veiculo.nome);
@@ -135,8 +132,9 @@ export default function VeiculosList({
   }
 
   return (
-    <div className="p-6 rounded-lg flex">
-      <div className="flex w-full">
+    <div className="p-6 rounded-lg flex flex-col gap-6">
+      {/* Tabela para telas grandes */}
+      <div className="hidden sm:block">
         <table className="min-w-full table-auto">
           <thead>
             <tr className="border-b">
@@ -171,7 +169,6 @@ export default function VeiculosList({
                   <span className="ml-2">{veiculo.status}</span>
                 </td>
                 <td className="px-4 py-2 flex justify-end gap-4">
-                  {/* Botão de Editar */}
                   <button
                     onClick={() => handleEdit(veiculo)}
                     className="text-blue-500"
@@ -184,7 +181,6 @@ export default function VeiculosList({
                     />
                   </button>
 
-                  {/* Botão de Inativar */}
                   <button
                     onClick={() => handleInactivate(veiculo.id, veiculo.status)}
                     className="text-yellow-500 cursor-pointer"
@@ -197,7 +193,6 @@ export default function VeiculosList({
                     />
                   </button>
 
-                  {/* Botão de Excluir */}
                   <button
                     onClick={() => handleDelete(veiculo.id)}
                     className="text-red-500 cursor-pointer"
@@ -214,6 +209,68 @@ export default function VeiculosList({
             ))}
           </tbody>
         </table>
+      </div>
+
+      {/* Cartões para telas pequenas */}
+      <div className="sm:hidden">
+        {veiculos.map((veiculo) => (
+          <div
+            key={veiculo.id}
+            className={`p-4 rounded-lg border mb-4 ${
+              veiculo.status === 'inativo' ? 'bg-red-50' : ''
+            }`}
+          >
+            <div className="flex justify-between">
+              <div>
+                <h4 className="text-lg font-semibold">{veiculo.nome}</h4>
+                <p className="text-sm text-gray-500">{veiculo.placa}</p>
+                <div className="flex items-center">
+                  <span
+                    className={`w-2 h-2 rounded-full inline-block mr-2 ${
+                      veiculo.status === 'ativo' ? 'bg-green-500' : 'bg-red-500'
+                    }`}
+                  ></span>
+                  <span className="text-sm">{veiculo.status}</span>
+                </div>
+              </div>
+              <div className="flex gap-2 items-center">
+                <button
+                  onClick={() => handleEdit(veiculo)}
+                  className="text-blue-500"
+                >
+                  <Image
+                    src="/images/edit.svg"
+                    alt="edit"
+                    width={24}
+                    height={24}
+                  />
+                </button>
+                <button
+                  onClick={() => handleInactivate(veiculo.id, veiculo.status)}
+                  className="text-yellow-500"
+                >
+                  <Image
+                    src="/images/archive.svg"
+                    alt="archive"
+                    width={24}
+                    height={24}
+                  />
+                </button>
+                <button
+                  onClick={() => handleDelete(veiculo.id)}
+                  className="text-red-500"
+                >
+                  <Image
+                    src="/images/bin.svg"
+                    alt="delete"
+                    width={24}
+                    height={24}
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* Modal for editing vehicle */}
