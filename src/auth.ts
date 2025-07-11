@@ -1,4 +1,3 @@
-// auth.ts
 import prisma from '@/lib/prisma';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import bcrypt from 'bcrypt';
@@ -8,7 +7,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 export const { auth, handlers, signIn, signOut } = NextAuth({
   session: {
     strategy: 'jwt',
-    maxAge: 60 * 60, // 1 hora
+    maxAge: 60 * 60,
   },
   providers: [
     CredentialsProvider({

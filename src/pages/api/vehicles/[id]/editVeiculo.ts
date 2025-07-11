@@ -1,4 +1,3 @@
-// pages/api/veiculos/[id]/edit.ts
 import prisma from '@/lib/prisma';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -7,10 +6,9 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   const { id } = req.query;
+  const { nome, placa } = req.body;
 
   if (req.method === 'PUT') {
-    const { nome, placa } = req.body;
-
     try {
       const updatedVehicle = await prisma.veiculo.update({
         where: { id: String(id) },

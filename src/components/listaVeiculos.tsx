@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from '@/components/ui/dialog'; // Assuming you are using your Dialog component
 import Image from 'next/image';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 interface Veiculo {
@@ -10,9 +16,19 @@ interface Veiculo {
   status: string;
 }
 
-export default function VeiculosList() {
+export default function VeiculosList({
+  vehicles,
+  fetchVehicles,
+}: {
+  vehicles: Veiculo[];
+  fetchVehicles: () => void;
+}) {
   const [veiculos, setVeiculos] = useState<Veiculo[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editVehicle, setEditVehicle] = useState<Veiculo | null>(null);
+  const [vehicleName, setVehicleName] = useState('');
+  const [vehiclePlate, setVehiclePlate] = useState('');
 
   useEffect(() => {
     async function fetchVeiculos() {
@@ -23,7 +39,7 @@ export default function VeiculosList() {
     }
 
     fetchVeiculos();
-  }, []);
+  }, [vehicles]);
 
   // Function to handle Delete
   const handleDelete = async (id: string) => {
@@ -70,24 +86,43 @@ export default function VeiculosList() {
     }
   };
 
-  // Function to handle Edit
-  const handleEdit = async (id: string, updatedData: any) => {
+  // Function to handle Edit and open the modal
+  const handleEdit = (veiculo: Veiculo) => {
+    setEditVehicle(veiculo);
+    setVehicleName(veiculo.nome);
+    setVehiclePlate(veiculo.placa);
+    setIsModalOpen(true);
+  };
+
+  // Submit the edited vehicle
+  const handleSubmitEdit = async () => {
+    if (!editVehicle) return;
+
+    const updatedData = {
+      nome: vehicleName,
+      placa: vehiclePlate,
+    };
+
     try {
-      const response = await fetch(`/api/veiculos/${id}/editVeiculo`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `/api/veiculos/${editVehicle.id}/editVeiculo`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updatedData),
         },
-        body: JSON.stringify(updatedData),
-      });
+      );
 
       if (response.ok) {
         const updatedVehicle = await response.json();
         setVeiculos((prevVeiculos) =>
           prevVeiculos.map((veiculo) =>
-            veiculo.id === id ? updatedVehicle : veiculo,
+            veiculo.id === updatedVehicle.id ? updatedVehicle : veiculo,
           ),
         );
+        setIsModalOpen(false); // Close the modal
       } else {
         alert('Failed to edit vehicle');
       }
@@ -124,7 +159,7 @@ export default function VeiculosList() {
             {veiculos.map((veiculo) => (
               <tr
                 key={veiculo.id}
-                className={veiculo.status === 'inativo' ? 'bg-gray-100' : ''}
+                className={veiculo.status === 'inativo' ? 'bg-red-50' : ''}
               >
                 <td className="px-4 py-2">{veiculo.nome}</td>
                 <td className="px-4 py-2">{veiculo.placa}</td>
@@ -138,8 +173,8 @@ export default function VeiculosList() {
                 </td>
                 <td className="px-4 py-2 flex justify-end gap-4">
                   {/* Botão de Editar */}
-                  <Link
-                    href={`/vehicles/edit/${veiculo.id}`}
+                  <button
+                    onClick={() => handleEdit(veiculo)}
                     className="text-blue-500"
                   >
                     <Image
@@ -148,7 +183,7 @@ export default function VeiculosList() {
                       width={38}
                       height={38}
                     />
-                  </Link>
+                  </button>
 
                   {/* Botão de Inativar */}
                   <button
@@ -181,6 +216,51 @@ export default function VeiculosList() {
           </tbody>
         </table>
       </div>
+
+      {/* Modal for editing vehicle */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent>
+          <DialogTitle>Edit Vehicle</DialogTitle>
+          <DialogDescription>
+            Edit the details of the vehicle.
+          </DialogDescription>
+
+          <div>
+            <label className="block">Nome do Veículo</label>
+            <input
+              type="text"
+              value={vehicleName}
+              onChange={(e) => setVehicleName(e.target.value)}
+              className="w-full border p-2 rounded"
+            />
+          </div>
+
+          <div>
+            <label className="block">Placa do Veículo</label>
+            <input
+              type="text"
+              value={vehiclePlate}
+              onChange={(e) => setVehiclePlate(e.target.value)}
+              className="w-full border p-2 rounded"
+            />
+          </div>
+
+          <div className="flex justify-end space-x-4 mt-4">
+            <DialogClose
+              type="button"
+              className="bg-gray-400 text-white py-2 px-4 rounded cursor-pointer"
+            >
+              Cancelar
+            </DialogClose>
+            <button
+              onClick={handleSubmitEdit}
+              className="bg-blue-600 text-white py-2 px-6 rounded cursor-pointer"
+            >
+              Save Changes
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

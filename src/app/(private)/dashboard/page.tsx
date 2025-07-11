@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 import CardInfo from '@/components/cardInfo';
 import VeiculosList from '@/components/listaVeiculos';
@@ -18,23 +19,60 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { VehicleFormData, vehicleSchema } from '../../../schema/veiculo';
 
+interface Veiculo {
+  id: string;
+  nome: string;
+  placa: string;
+  status: string; // Add status field for consistency
+}
+
 const Layout: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { data: session } = useSession();
-  const [isClient, setIsClient] = useState(false); // State to track if
+  const [vehicles, setVehicles] = useState<Veiculo[]>([]); // Change from Vehicle[] to Veiculo[]
 
+  const { data: session } = useSession();
+  const [isClient, setIsClient] = useState(false);
+  const getFirstName = (name: string) => {
+    return name.split(' ')[0]; // Pega a primeira parte antes do espaço
+  };
   const router = useRouter();
 
   useEffect(() => {
-    setIsClient(true); // Set to true once the component is mounted on the client
+    setIsClient(true);
   }, []);
 
   useEffect(() => {
     if (isClient && !session) {
-      router.push('/signin'); // Redirect if no session found and on the client-side
+      router.push('/signin');
     }
   }, [isClient, session, router]);
 
+  const onSubmit = async (data: VehicleFormData) => {
+    try {
+      const response = await fetch('/api/vehicles/createVeiculo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        const newVehicle = await response.json();
+
+        reset();
+        setIsModalOpen(false);
+        setVehicles((prevVehicles) => [...prevVehicles, newVehicle]); // Add the new vehicle
+      } else {
+        const errorData = await response.json();
+        alert(errorData.error || 'Erro desconhecido');
+      }
+    } catch (error) {
+      alert('Erro ao criar veículo');
+    }
+  };
+
+  // Form handling with react-hook-form and validation
   const {
     register,
     handleSubmit,
@@ -44,11 +82,16 @@ const Layout: React.FC = () => {
     resolver: zodResolver(vehicleSchema),
   });
 
-  const onSubmit = (data: VehicleFormData) => {
-    console.log('Novo Veículo:', data);
-    reset();
-    setIsModalOpen(false);
+  // Fetch vehicles initially
+  const fetchVehicles = async () => {
+    const response = await fetch('/api/vehicles/getVeiculos');
+    const data = await response.json();
+    setVehicles(data); // Set the vehicles data (Veiculo[])
   };
+
+  useEffect(() => {
+    fetchVehicles();
+  }, []);
 
   const [activeTab, setActiveTab] = useState('dashboard');
 
@@ -131,7 +174,7 @@ const Layout: React.FC = () => {
           <div className="container mx-auto px-4 py-6">
             <header className="grid items-center py-4 px-6 rounded-lg mb-6">
               <div className="text-5xl font-normal text-[#2B3A4B]">
-                Olá Ewerton,
+                Olá {getFirstName(session.user.name)},
               </div>
               <div className="flex text-2xl text-[#858C94]">
                 Cadastre e gerencie seus veículos
@@ -208,7 +251,7 @@ const Layout: React.FC = () => {
                 </DialogContent>
               </Dialog>
             </div>
-            <VeiculosList />
+            <VeiculosList vehicles={vehicles} fetchVehicles={fetchVehicles} />
           </div>
         </div>
       </div>
