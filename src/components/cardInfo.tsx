@@ -45,8 +45,8 @@ export default function CardInfo() {
           className="relative grid justify-center items-center mx-2"
         />
         <div>
-          <h3 className="text-lg font-semibold mb-2 text-gray-800">Total</h3>
-          <p className="text-xl font-bold text-gray-800">{data.total}</p>
+          <h3 className="text-base mb-2 text-gray-400">Total</h3>
+          <p className="text-4xl font-bold text-gray-800">{data.total}</p>
         </div>
       </div>
       <div className="bg-white p-4 rounded-lg shadow-lg flex gap-5 items-center">
@@ -58,8 +58,8 @@ export default function CardInfo() {
           className="relative grid justify-center items-center mx-2"
         />
         <div>
-          <h3 className="text-lg font-semibold mb-2 text-gray-800">Ativos</h3>
-          <p className="text-xl font-bold">{data.ativos}</p>
+          <h3 className="text-base mb-2 text-gray-400">Ativos</h3>
+          <p className="text-4xl font-bold text-gray-800">{data.ativos}</p>
         </div>
       </div>
       <div className="bg-white p-4 rounded-lg shadow-lg flex gap-5 items-center">
@@ -71,8 +71,8 @@ export default function CardInfo() {
           className="relative grid justify-center items-center mx-2"
         />
         <div>
-          <h3 className="text-lg font-semibold mb-2 text-gray-800">Inativos</h3>
-          <p className="text-xl font-bold">{data.inativos}</p>
+          <h3 className="text-base mb-2 text-gray-400">Inativos</h3>
+          <p className="text-4xl font-bold text-gray-800">{data.inativos}</p>
         </div>
       </div>
     </div>

@@ -5,7 +5,6 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
@@ -148,10 +147,10 @@ const Layout: React.FC = () => {
         <div className="w-full sm:w-4/5 p-6">
           <div className="container mx-auto px-4 py-6">
             <header className="grid items-center py-4 px-6 rounded-lg mb-6">
-              <div className="text-5xl font-normal text-[#2B3A4B]">
+              <div className="text-3xl sm:text-5xl font-normal text-[#2B3A4B]">
                 Olá {getFirstName(session.user.name)},
               </div>
-              <div className="flex text-2xl text-[#858C94]">
+              <div className="flex text-lg sm:text-2xl text-[#858C94]">
                 Cadastre e gerencie seus veículos
               </div>
             </header>
@@ -176,17 +175,25 @@ const Layout: React.FC = () => {
                 </DialogTrigger>
 
                 <DialogContent>
-                  <DialogTitle>Cadastrar Novo Veículo</DialogTitle>
-                  <DialogDescription>
-                    Preencha as informações do veículo.
-                  </DialogDescription>
+                  <DialogTitle className="flex justify-center items-center">
+                    <Image
+                      src="/images/carrologo.svg"
+                      alt="plus"
+                      width={54}
+                      height={54}
+                      className="relative grid justify-center items-center mx-2"
+                    />
+                    Cadastrar Novo Veículo
+                  </DialogTitle>
+
                   <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                     <div>
                       <label className="block">Nome do Veículo</label>
                       <input
                         type="text"
+                        placeholder="Digite o nome do Veículo"
                         {...register('vehicleName')}
-                        className="w-full border p-2 rounded"
+                        className="w-full border p-1 rounded"
                       />
                       {errors.vehicleName && (
                         <p className="text-red-500 text-sm">
@@ -199,8 +206,9 @@ const Layout: React.FC = () => {
                       <label className="block">Placa do Veículo</label>
                       <input
                         type="text"
+                        placeholder="Digite o número da placa"
                         {...register('vehiclePlate')}
-                        className="w-full border p-2 rounded text-uppercase"
+                        className="w-full border p-1 rounded text-uppercase"
                       />
                       {errors.vehiclePlate && (
                         <p className="text-red-500 text-sm">
