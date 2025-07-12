@@ -40,7 +40,7 @@ export default function SignIn() {
   }, [session, router]);
 
   if (session) {
-    return null; // Ou um componente de carregamento
+    return null;
   }
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
@@ -143,10 +143,12 @@ export default function SignIn() {
         </div>
 
         <div className="hidden sm:block w-full sm:w-1/2 h-full">
-          <img
+          <Image
             src="/images/login.svg"
             alt="login illustration"
-            className="w-full h-full object-contain rounded-tr-3xl rounded-br-3xl"
+            className="w-full h-full rounded-br-3xl object-fill"
+            width={1100}
+            height={1100}
           />
         </div>
       </div>

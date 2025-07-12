@@ -79,11 +79,10 @@ const Layout: React.FC = () => {
     resolver: zodResolver(vehicleSchema),
   });
 
-  // Fetch vehicles initially
   const fetchVehicles = async () => {
     const response = await fetch('/api/vehicles/getVeiculos');
     const data = await response.json();
-    setVehicles(data); // Set the vehicles data (Veiculo[])
+    setVehicles(data);
   };
 
   useEffect(() => {
@@ -98,7 +97,8 @@ const Layout: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      <Navbar userName={session.user.name} />
+      <Navbar userName={session?.user?.name ?? 'Usuário'} />
+
       <div className="flex flex-1 flex-col sm:flex-row">
         <div className="w-full sm:w-1/5 text-black p-6 border-b sm:border-r sm:border-gray-200">
           <div className="text-xl font-light mb-6">Dashboard</div>{' '}
@@ -148,14 +148,13 @@ const Layout: React.FC = () => {
           <div className="container mx-auto px-4 py-6">
             <header className="grid items-center py-4 px-6 rounded-lg mb-6">
               <div className="text-3xl sm:text-5xl font-normal text-[#2B3A4B]">
-                Olá {getFirstName(session.user.name)},
+                Olá {getFirstName(session?.user?.name ?? 'Usuário')},
               </div>
               <div className="flex text-lg sm:text-2xl text-[#858C94]">
                 Cadastre e gerencie seus veículos
               </div>
             </header>
             <CardInfo vehicles={vehicles} />{' '}
-            {/* Passando a lista de veículos para os cards */}
             <div className="p-6 rounded-lg mb-6">
               <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                 <DialogTrigger asChild>
